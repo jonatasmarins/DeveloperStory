@@ -1,0 +1,158 @@
+﻿using DeveloperStore.App.Models.Commands.Product.Request;
+using DeveloperStore.App.Models.Queries.Product.Requests;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
+
+namespace DeveloperStore.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ProductController(IMediator mediator, ILogger<ProductController> logger) : Controller
+    {
+        //TODO - Documentar as apis com swagger
+
+        /// <summary>
+        /// Retrieve a list of all products
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] GetAllQueryRequest request)
+        {
+            try
+            {
+                var result = await mediator.Send(request);
+
+                if (result is null || !result.Data.Any()) return NotFound(result);                
+
+                return Response(result);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred, please try again or contact the administrator");
+            }
+        }
+
+        /// <summary>
+        /// Retrieve a specific product by ID
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetById([FromRoute] GetByIdQueryRequest request)
+        {
+            try
+            {
+                var result = await mediator.Send(request);
+
+                if (result is null || result.Id == 0) return NotFound(result);                
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred, please try again or contact the administrator");
+            }
+        }
+
+        /// <summary>
+        /// Add a new product
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] AddCommandRequest request)
+        {
+            try
+            {
+                var result = await mediator.Send(request);                
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred, please try again or contact the administrator");
+            }
+        }
+
+
+        [HttpPut($"{{id}}")]
+        public async Task<IActionResult> Put(int id, [FromBody] UpdateCommandRequest request)
+        {
+            try
+            {
+                request.Id = id;
+
+                var result = await mediator.Send(request);
+
+                if (result is null || result.Id == 0) return NotFound(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred, please try again or contact the administrator");
+            }
+        }
+
+        // DELETE api/<ProductController>/5
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> Delete([FromRoute] DeleteCommandRequest request)
+        {
+            try
+            {
+                var result = await mediator.Send(request);
+
+                if (!result.IsSuccess) return NotFound(result.Message);
+
+                return Ok(result.Message);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred, please try again or contact the administrator");
+            }
+        }
+
+        [HttpGet("Categories")]
+        public async Task<IActionResult> GetAllCategories()
+        {
+            try
+            {
+                var result = await mediator.Send(new GetAllCategoriesQueryRequest());
+
+                if (result is null || !result.Any()) return NotFound(result);                
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred, please try again or contact the administrator");
+            }
+        }
+
+        [HttpGet("Category/{Category}")]
+        public async Task<IActionResult> GetByCategory([FromRoute] GetByCategoryQueryRequest request)
+        {
+            try
+            {
+                var result = await mediator.Send(request);
+
+                if (result is null || result.TotalItems == 0) return NotFound(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error: {ex.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred, please try again or contact the administrator");
+            }
+        }
+    }
+}
