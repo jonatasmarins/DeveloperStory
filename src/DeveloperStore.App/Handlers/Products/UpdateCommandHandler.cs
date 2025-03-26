@@ -10,15 +10,15 @@ namespace DeveloperStore.App.Handlers.Products
     public class UpdateCommandHandler(
         IProductRepository productRepository,
         IUnitOfWork unitOfWork,
-        IMapper mapper) : IRequestHandler<UpdateCommandRequest, UpdateCommandResponse>
+        IMapper mapper) : IRequestHandler<UpdateProductCommandRequest, UpdateProductCommandResponse>
     {
-        public async Task<UpdateCommandResponse> Handle(UpdateCommandRequest request, CancellationToken cancellationToken)
+        public async Task<UpdateProductCommandResponse> Handle(UpdateProductCommandRequest request, CancellationToken cancellationToken)
         {
             //TODO Validation com FluentValidation
 
             var entity = await productRepository.GetByIdAsync(request.Id, new QueryOptions { IsAsNoTracking = true });
 
-            if (entity == null || entity.Id == 0) return new UpdateCommandResponse();
+            if (entity == null || entity.Id == 0) return new UpdateProductCommandResponse();
 
             mapper.Map(request, entity);
 
@@ -26,7 +26,7 @@ namespace DeveloperStore.App.Handlers.Products
 
             await unitOfWork.SaveAsync(cancellationToken);
 
-            return mapper.Map<UpdateCommandResponse>(result);
+            return mapper.Map<UpdateProductCommandResponse>(result);
         }
     }
 }

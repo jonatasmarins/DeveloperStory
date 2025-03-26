@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace DeveloperStore.API.Controllers
 {
@@ -14,25 +13,6 @@ namespace DeveloperStore.API.Controllers
     ) : Controller
     {
         //TODO - Documentar as apis com swagger
-
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterCommandRequest request)
-        {
-            try
-            {
-                var result = await mediator.Send(request);
-
-                if (!result.Success) return BadRequest(result);
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError($"Error: {ex.Message}");
-                return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred, please try again or contact the administrator");
-            }
-        }
 
         [HttpPost("Login")]
         [AllowAnonymous]

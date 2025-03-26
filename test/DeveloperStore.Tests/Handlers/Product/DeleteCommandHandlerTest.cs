@@ -31,7 +31,7 @@ namespace DeveloperStore.Tests.Handlers.Product
                 .GetByIdAsync(Arg.Any<int>(), Arg.Any<QueryOptions>())
                 .Returns(obj);
 
-            var request = new Faker<DeleteCommandRequest>().RuleFor(x => x.Id, f => f.Random.Int(1, 5));
+            var request = new Faker<DeleteProductCommandRequest>().RuleFor(x => x.Id, f => f.Random.Int(1, 5));
 
             //Act
             var handler = new DeleteCommandHandler(productRepository, unitOfWork, mapper);
@@ -53,7 +53,7 @@ namespace DeveloperStore.Tests.Handlers.Product
                 .GetByIdAsync(Arg.Any<int>(), Arg.Any<QueryOptions>())
                 .Returns(obj);
 
-            var request = new Faker<DeleteCommandRequest>().RuleFor(x => x.Id, f => f.Random.Int(1, 5));
+            var request = new Faker<DeleteProductCommandRequest>().RuleFor(x => x.Id, f => f.Random.Int(1, 5));
 
             //Act
             var handler = new DeleteCommandHandler(productRepository, unitOfWork, mapper);

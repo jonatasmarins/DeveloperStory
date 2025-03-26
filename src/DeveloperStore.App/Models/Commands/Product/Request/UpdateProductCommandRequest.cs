@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace DeveloperStore.App.Models.Commands.Product.Request
 {
-    public class UpdateCommandRequest : IRequest<UpdateCommandResponse>
+    public class UpdateProductCommandRequest : IRequest<UpdateProductCommandResponse>
     {
         [JsonIgnore]
         public int Id { get; set; }

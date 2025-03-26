@@ -19,9 +19,4 @@
     <ProjectReference Include="..\DeveloperStore.Infra\DeveloperStore.Infra.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\Queries\Auth\Response\" />
-    <Folder Include="Models\Queries\Auth\Request\" />
-  </ItemGroup>
-
 </Project>

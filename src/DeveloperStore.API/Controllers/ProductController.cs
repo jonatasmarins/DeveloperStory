@@ -64,7 +64,7 @@ namespace DeveloperStore.API.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] AddCommandRequest request)
+        public async Task<IActionResult> Add([FromBody] AddProductCommandRequest request)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace DeveloperStore.API.Controllers
 
 
         [HttpPut($"{{id}}")]
-        public async Task<IActionResult> Put(int id, [FromBody] UpdateCommandRequest request)
+        public async Task<IActionResult> Put(int id, [FromBody] UpdateProductCommandRequest request)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace DeveloperStore.API.Controllers
 
         // DELETE api/<ProductController>/5
         [HttpDelete("{Id}")]
-        public async Task<IActionResult> Delete([FromRoute] DeleteCommandRequest request)
+        public async Task<IActionResult> Delete([FromRoute] DeleteProductCommandRequest request)
         {
             try
             {

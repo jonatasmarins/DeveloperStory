@@ -1,7 +1,9 @@
 ﻿using DeveloperStore.Domain.Repositories;
+using DeveloperStore.Domain.Repositories.Models;
 using DeveloperStore.Infra.Context;
 using DeveloperStore.Infra.Context.Identity;
 using DeveloperStore.Infra.Repositories;
+using DeveloperStore.Infra.Seeds;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +20,12 @@ namespace DeveloperStore.Infra
             services.AddAppIdentityDbContext(configuration);
 
             services.AddRepositories();
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            SeedRoles.InitializeDateBase(serviceProvider);
+
+            SeedRoles.AddRoles(serviceProvider);
 
             return services;
         }
@@ -39,7 +47,7 @@ namespace DeveloperStore.Infra
             var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
             services
-                .AddIdentity<ApplicationUser, IdentityRole>(opt =>
+                .AddIdentity<ApplicationUser, ApplicationRole>(opt =>
                 {
                     opt.User.RequireUniqueEmail = true;
                     opt.Password.RequireDigit = false;
@@ -59,11 +67,15 @@ namespace DeveloperStore.Infra
 
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
+            services.AddScoped<RoleManager<ApplicationRole>>();
+
             services.AddScoped<IAppDbContext, AppDbContext>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IProductRepository, ProductRepository>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
         }

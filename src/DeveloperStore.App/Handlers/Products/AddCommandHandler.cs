@@ -10,9 +10,9 @@ namespace DeveloperStore.App.Handlers.Products
     public class AddCommandHandler(
         IProductRepository productRepository,
         IUnitOfWork unitOfWork,
-        IMapper mapper) : IRequestHandler<AddCommandRequest, AddCommandResponse>
+        IMapper mapper) : IRequestHandler<AddProductCommandRequest, AddProductCommandResponse>
     {
-        public async Task<AddCommandResponse> Handle(AddCommandRequest request, CancellationToken cancellationToken)
+        public async Task<AddProductCommandResponse> Handle(AddProductCommandRequest request, CancellationToken cancellationToken)
         {
             //TODO Fluent Validator
 
@@ -22,7 +22,7 @@ namespace DeveloperStore.App.Handlers.Products
 
             await unitOfWork.SaveAsync(cancellationToken);
 
-            return mapper.Map<AddCommandResponse>(result);
+            return mapper.Map<AddProductCommandResponse>(result);
         }
     }
 }

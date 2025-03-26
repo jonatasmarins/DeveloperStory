@@ -3,12 +3,11 @@ using DeveloperStore.Domain.Repositories;
 using DeveloperStore.Domain.Repositories.Models;
 using DeveloperStore.Infra.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System.Linq.Expressions;
 
 namespace DeveloperStore.Infra.Repositories
 {
-    public abstract class Repository<T> : IRepository<T> where T : Entity
+    public abstract class Repository<T> : IRepository<T> where T : class
     {
         public AppDbContext _context { get; private set; } = null!;
         private readonly DbSet<T> _dbSet;
@@ -19,7 +18,7 @@ namespace DeveloperStore.Infra.Repositories
             _dbSet = _context.Set<T>();
         }
 
-        public async Task<PaginatedResult<IEnumerable<T>>> GetAllAsync(QueryOptions options)
+        public virtual async Task<PaginatedResult<IEnumerable<T>>> GetAllAsync(QueryOptions options)
         {
             var query = SetDbOptions(options);
 
@@ -36,7 +35,7 @@ namespace DeveloperStore.Infra.Repositories
             };
         }
 
-        public async Task<PaginatedResult<IEnumerable<T>>> GetWhereAsync(Expression<Func<T, bool>> predicate, QueryOptions options)
+        public virtual async Task<PaginatedResult<IEnumerable<T>>> GetWhereAsync(Expression<Func<T, bool>> predicate, QueryOptions options)
         {
             var query = SetDbOptions(options);
 
@@ -53,21 +52,21 @@ namespace DeveloperStore.Infra.Repositories
             };            
         }
 
-        public async Task<T?> GetByIdAsync(int id, QueryOptions options)
+        public virtual async Task<T?> GetByIdAsync(int id, QueryOptions options)
         {
             SetDbOptions(options);
             
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<T> AddAsync(T entity)
+        public virtual async Task<T> AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);            
 
             return entity;
         }
 
-        public async Task AddRangeAsync(IEnumerable<T> entities)
+        public virtual async Task AddRangeAsync(IEnumerable<T> entities)
         {
             foreach (var item in entities)
             {
@@ -75,14 +74,14 @@ namespace DeveloperStore.Infra.Repositories
             }
         }
 
-        public async Task<T> UpdateAsync(T entity)
+        public virtual async Task<T> UpdateAsync(T entity)
         {
             await Task.FromResult(_dbSet.Update(entity));
 
             return entity;
         }
 
-        public async Task DeleteAsync(int id)
+        public virtual async Task DeleteAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
             if (entity != null)
@@ -91,7 +90,7 @@ namespace DeveloperStore.Infra.Repositories
             }
         }
 
-        public async Task DeleteRangeAsync(IEnumerable<T> entities)
+        public virtual async Task DeleteRangeAsync(IEnumerable<T> entities)
         {
             foreach (var item in entities)
             {
@@ -104,7 +103,7 @@ namespace DeveloperStore.Infra.Repositories
             }
         }
 
-        private IQueryable<T> SetDbOptions(QueryOptions options)
+        protected IQueryable<T> SetDbOptions(QueryOptions options)
         {
             var query = _dbSet.AsQueryable();
 

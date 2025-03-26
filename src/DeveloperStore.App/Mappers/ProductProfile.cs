@@ -8,9 +8,9 @@ using DeveloperStore.Domain.Services.Models;
 
 namespace DeveloperStore.App.Mappers
 {
-    public class ProductServiceProfile : Profile
+    public class ProductProfile : Profile
     {
-        public ProductServiceProfile()
+        public ProductProfile()
         {
             CreateMap(typeof(PaginatedResult<>), typeof(ResultResponse<>))
                 .ReverseMap();
@@ -24,16 +24,16 @@ namespace DeveloperStore.App.Mappers
             CreateMap<Product, GetByIdQueryResponse>()
                 .ReverseMap();
 
-            CreateMap<AddCommandRequest, Product>()
+            CreateMap<AddProductCommandRequest, Product>()
                 .ReverseMap();
 
-            CreateMap<AddCommandResponse, Product>()
+            CreateMap<AddProductCommandResponse, Product>()
                 .ReverseMap();
 
-            CreateMap<UpdateCommandRequest, Product>()
+            CreateMap<UpdateProductCommandRequest, Product>()
                 .ConvertUsing<ProductResolver>();
 
-            CreateMap<UpdateCommandResponse, Product>()
+            CreateMap<UpdateProductCommandResponse, Product>()
                 .ReverseMap();
 
             CreateMap<GetByCategoryQueryResponse, Product>()
@@ -41,9 +41,9 @@ namespace DeveloperStore.App.Mappers
         }
     }
 
-    public class ProductResolver : ITypeConverter<UpdateCommandRequest, Product>
+    public class ProductResolver : ITypeConverter<UpdateProductCommandRequest, Product>
     {
-        public Product Convert(UpdateCommandRequest source, Product destination, ResolutionContext context)
+        public Product Convert(UpdateProductCommandRequest source, Product destination, ResolutionContext context)
         {
             destination.Title = source.Title;
             destination.Price = source.Price;

@@ -15,10 +15,6 @@ namespace DeveloperStore.Infra.Context
 
             builder
                 .Property(p => p.Id)
-                .UseIdentityColumn();
-
-            builder
-                .Property(p => p.Id)
                 .ValueGeneratedOnAdd();
 
             builder

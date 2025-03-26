@@ -2,7 +2,7 @@
 
 namespace DeveloperStore.App.Models.Commands.Product.Response
 {
-    public class DeleteCommandResponse
+    public class DeleteProductCommandResponse
     {
         [JsonIgnore]
         public bool IsSuccess { get; set; } = false;

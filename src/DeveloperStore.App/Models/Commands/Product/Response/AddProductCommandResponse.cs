@@ -1,11 +1,10 @@
-﻿using DeveloperStore.App.Models.Commands.Product.Response;
-using DeveloperStore.App.Models.Queries.Product.Responses;
-using MediatR;
+﻿using DeveloperStore.App.Models.Queries.Product.Responses;
 
-namespace DeveloperStore.App.Models.Commands.Product.Request
+namespace DeveloperStore.App.Models.Commands.Product.Response
 {
-    public class AddCommandRequest : IRequest<AddCommandResponse>
-    {        
+    public class AddProductCommandResponse
+    {
+        public int Id { get; set; }
         public string Title { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }

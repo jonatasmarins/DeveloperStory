@@ -1,10 +1,11 @@
 using DeveloperStore.App;
+using DeveloperStore.Domain.Enums;
 using DeveloperStore.Infra;
 using DeveloperStore.Infra.Context.Identity;
+using DeveloperStore.Infra.Seeds;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -27,16 +28,17 @@ builder.Services.AddControllers(config =>
     options.JsonSerializerOptions.WriteIndented = true;
 });
 
-//builder.Services
-//    .AddAuthorizationBuilder()
-//    .AddPolicy("user", policy => policy.RequireClaim("Store", "user"))
-//    .AddPolicy("admin", policy => policy.RequireClaim("Store", "admin"));
+builder.Services
+    .AddAuthorizationBuilder()
+    .AddPolicy(Role.Admin.ToString(), policy => policy.RequireClaim("Role", Role.Admin.ToString()))
+    .AddPolicy(Role.Customer.ToString(), policy => policy.RequireClaim("Role", Role.Customer.ToString()))
+    .AddPolicy(Role.Manager.ToString(), policy => policy.RequireClaim("Role", Role.Manager.ToString()));
 
 //builder.Services.AddAuthentication();
 
-builder.Logging.ClearProviders(); // Limpar os provedores de log padrão
-builder.Logging.AddConsole(); // Adicionar logs no console
-builder.Logging.AddDebug(); // Adicionar logs de Debug
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole(); 
+builder.Logging.AddDebug(); 
 
 var key = Encoding.ASCII.GetBytes(IdentitySettings.Secret);
 

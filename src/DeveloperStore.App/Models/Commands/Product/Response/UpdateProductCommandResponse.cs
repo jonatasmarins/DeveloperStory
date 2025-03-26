@@ -2,7 +2,7 @@
 
 namespace DeveloperStore.App.Models.Commands.Product.Response
 {
-    public class AddCommandResponse
+    public class UpdateProductCommandResponse
     {
         public int Id { get; set; }
         public string Title { get; set; }

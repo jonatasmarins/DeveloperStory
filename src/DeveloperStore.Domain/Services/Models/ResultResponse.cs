@@ -71,7 +71,7 @@ namespace DeveloperStore.Domain.Services.Models
     public class ResultResponse<T>(T value) : Result, IResultResponse<T>
     {
         public ResultResponse() : this(default)
-        {            
+        {
         }
 
         public T Data { get; set; } = value;
