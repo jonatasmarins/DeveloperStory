@@ -21,7 +21,7 @@ namespace DeveloperStore.Infra.Repositories
         {
             SetDbOptions(options);
             
-            return await _dbSet.Where(x => x.UserId == id).FirstOrDefaultAsync();
+            return await _dbSet.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         public override async Task<T> AddAsync(T entity)
@@ -48,7 +48,7 @@ namespace DeveloperStore.Infra.Repositories
 
         public override async Task DeleteAsync(int id)
         {
-            var entity = await _dbSet.Where(x => x.UserId == id).FirstAsync();
+            var entity = await _dbSet.Where(x => x.Id == id).FirstAsync();
             if (entity != null)
             {
                 await _context.DeleteAsync(entity);
@@ -59,7 +59,7 @@ namespace DeveloperStore.Infra.Repositories
         {
             foreach (var item in entities)
             {
-                var entity = await _dbSet.Where(x => x.UserId == item.UserId).FirstAsync();
+                var entity = await _dbSet.Where(x => x.Id == item.Id).FirstAsync();
 
                 if (entity != null)
                 {

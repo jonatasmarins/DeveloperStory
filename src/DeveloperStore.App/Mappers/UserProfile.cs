@@ -6,7 +6,6 @@ using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Repositories.Models;
 using DeveloperStore.Domain.Services.Models;
 using DeveloperStore.Infra.Context.Identity;
-using Microsoft.AspNetCore.Identity;
 
 namespace DeveloperStore.App.Mappers
 {
@@ -31,8 +30,7 @@ namespace DeveloperStore.App.Mappers
             CreateMap<AddUserGeolocationRequest, Geolocation>()
                 .ReverseMap();
 
-            CreateMap<ApplicationUser, AddUserCommandResponse>()
-                .ForMember(src => src.Id, opt => opt.MapFrom(dest => dest.UserId))
+            CreateMap<ApplicationUser, AddUserCommandResponse>()                
                 .ReverseMap();
 
             #endregion
@@ -48,16 +46,14 @@ namespace DeveloperStore.App.Mappers
             CreateMap<GetAllUserGeolocationResponse, Geolocation>()
                 .ReverseMap();
 
-            CreateMap<GetAllUserQueryResponse, ApplicationUser>()
-                .ForMember(src => src.UserId, opt => opt.MapFrom(dest => dest.Id))                
+            CreateMap<GetAllUserQueryResponse, ApplicationUser>()                            
                 .ReverseMap();
 
             #endregion
 
             #region Update
 
-            CreateMap<UpdateUserCommandRequest, ApplicationUser>()
-                .ForMember(src => src.UserId, opt => opt.MapFrom(dest => dest.UserId))                
+            CreateMap<UpdateUserCommandRequest, ApplicationUser>()                           
                 .ReverseMap();
 
             CreateMap<UpdateUserNameRequest, Name>()
@@ -69,8 +65,7 @@ namespace DeveloperStore.App.Mappers
             CreateMap<UpdateUserGeolocationRequest, Geolocation>()
                 .ReverseMap();
 
-            CreateMap<ApplicationUser, UpdateUserCommandResponse>()
-                .ForMember(src => src.Id, opt => opt.MapFrom(dest => dest.UserId))
+            CreateMap<ApplicationUser, UpdateUserCommandResponse>()                
                 .ReverseMap();
 
             CreateMap<UpdateUserNameResponse, Name>()

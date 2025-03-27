@@ -18,9 +18,9 @@ namespace DeveloperStore.App.Handlers.Users
             //TODO Validation com FluentValidation
             var response = new ResultResponse<UpdateUserCommandResponse>();
 
-            var entity = await userRepository.GetByIdAsync(request.UserId, new QueryOptions { IsAsNoTracking = true });
+            var entity = await userRepository.GetByIdAsync(request.Id, new QueryOptions { IsAsNoTracking = true });
 
-            if (entity == null || entity.UserId == 0)
+            if (entity == null || entity.Id == 0)
             {
                 response.AddMessage("User Not Found");
                 response.StatusCode = System.Net.HttpStatusCode.NotFound;

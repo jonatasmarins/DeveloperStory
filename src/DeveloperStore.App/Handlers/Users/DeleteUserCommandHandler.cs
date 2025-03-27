@@ -17,7 +17,7 @@ namespace DeveloperStore.App.Handlers.Users
 
             var user = await userRepository.GetByIdAsync(request.Id, new QueryOptions { IsAsNoTracking = true, IsIgnoreAutoIncludes = true });
 
-            if (user == null || user.UserId == 0)
+            if (user == null || user.Id == 0)
             {
                 response.AddMessage("User not found!");
 

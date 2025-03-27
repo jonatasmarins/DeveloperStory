@@ -6,8 +6,7 @@ using System.ComponentModel.DataAnnotations;
 namespace DeveloperStore.Infra.Context.Identity
 {
     public class ApplicationUser : IdentityUser<int>
-    {   
-        public int UserId { get; set; }
+    {           
         public Name Name { get; set; } = new Name();
 
         public Address Address { get; set; } = new Address();

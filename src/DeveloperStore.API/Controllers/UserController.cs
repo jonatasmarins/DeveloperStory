@@ -75,7 +75,7 @@ namespace DeveloperStore.API.Controllers
         {
             try
             {
-                request.UserId = id;
+                request.Id = id;
 
                 var result = await mediator.Send(request);
 
