@@ -33,6 +33,15 @@ namespace DeveloperStore.App.Mappers
             CreateMap<ApplicationUser, AddUserCommandResponse>()                
                 .ReverseMap();
 
+            CreateMap<AddUserNameResponse, Name>()
+                .ReverseMap();
+
+            CreateMap<AddUserAddressResponse, Address>()
+                .ReverseMap();
+
+            CreateMap<AddUserGeolocationResponse, Geolocation>()
+                .ReverseMap();
+
             #endregion
 
             #region GetAll

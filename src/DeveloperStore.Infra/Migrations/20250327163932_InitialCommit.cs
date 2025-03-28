@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeveloperStore.Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class initialcommit : Migration
+    public partial class InitialCommit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,8 +37,6 @@ namespace DeveloperStore.Infra.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name_Firstname = table.Column<string>(type: "text", nullable: false),
                     Name_Lastname = table.Column<string>(type: "text", nullable: false),
@@ -209,6 +207,30 @@ namespace DeveloperStore.Infra.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Carts",
+                schema: "Store",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CARTID", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Carts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "Store",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Ratings",
                 schema: "Store",
                 columns: table => new
@@ -226,6 +248,34 @@ namespace DeveloperStore.Infra.Migrations
                     table.PrimaryKey("PK_RATING", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Ratings_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalSchema: "Store",
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CartProduct",
+                schema: "Store",
+                columns: table => new
+                {
+                    CartId = table.Column<int>(type: "integer", nullable: false),
+                    ProductId = table.Column<int>(type: "integer", nullable: false),
+                    Quantity = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MULT_CARTID_PRODID", x => new { x.CartId, x.ProductId });
+                    table.ForeignKey(
+                        name: "FK_CartProduct_Carts_CartId",
+                        column: x => x.CartId,
+                        principalSchema: "Store",
+                        principalTable: "Carts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CartProduct_Products_ProductId",
                         column: x => x.ProductId,
                         principalSchema: "Store",
                         principalTable: "Products",
@@ -278,6 +328,18 @@ namespace DeveloperStore.Infra.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_CartProduct_ProductId",
+                schema: "Store",
+                table: "CartProduct",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Carts_UserId",
+                schema: "Store",
+                table: "Carts",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Ratings_ProductId",
                 schema: "Store",
                 table: "Ratings",
@@ -309,6 +371,10 @@ namespace DeveloperStore.Infra.Migrations
                 schema: "Store");
 
             migrationBuilder.DropTable(
+                name: "CartProduct",
+                schema: "Store");
+
+            migrationBuilder.DropTable(
                 name: "Ratings",
                 schema: "Store");
 
@@ -317,11 +383,15 @@ namespace DeveloperStore.Infra.Migrations
                 schema: "Store");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers",
+                name: "Carts",
                 schema: "Store");
 
             migrationBuilder.DropTable(
                 name: "Products",
+                schema: "Store");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers",
                 schema: "Store");
         }
     }

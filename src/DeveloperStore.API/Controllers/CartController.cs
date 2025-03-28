@@ -1,5 +1,5 @@
-﻿using DeveloperStore.App.Models.Commands.User.Request;
-using DeveloperStore.App.Models.Queries.User.Request;
+﻿using DeveloperStore.App.Models.Commands.Cart.Request;
+using DeveloperStore.App.Models.Queries.Cart.Request;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +9,12 @@ namespace DeveloperStore.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController(IMediator mediator, ILogger<ProductController> logger) : Controller
+    public class CartController(IMediator mediator, ILogger<CartController> logger) : Controller
     {
         //TODO - Documentar as apis com swagger
-        
-        [HttpGet]        
-        public async Task<IActionResult> Get([FromQuery] GetAllUserQueryRequest request)
+
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] GetAllCartQueryRequest request)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace DeveloperStore.API.Controllers
 
 
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetById([FromRoute] GetByIdUserQueryRequest request)
+        public async Task<IActionResult> GetById([FromRoute] GetByIdCartQueryRequest request)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace DeveloperStore.API.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Add([FromBody] AddUserCommandRequest request)
+        public async Task<IActionResult> Add([FromBody] AddCartCommandRequest request)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace DeveloperStore.API.Controllers
 
 
         [HttpPut($"{{id}}")]
-        public async Task<IActionResult> Put(int id, [FromBody] UpdateUserCommandRequest request)
+        public async Task<IActionResult> Put(int id, [FromBody] UpdateCartCommandRequest request)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace DeveloperStore.API.Controllers
         }
 
         [HttpDelete("{Id}")]
-        public async Task<IActionResult> Delete([FromRoute] DeleteUserCommandRequest request)
+        public async Task<IActionResult> Delete([FromRoute] DeleteCartCommandRequest request)
         {
             try
             {

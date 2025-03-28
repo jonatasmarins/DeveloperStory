@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeveloperStore.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250326204608_initialcommit")]
-    partial class initialcommit
+    [Migration("20250327163932_InitialCommit")]
+    partial class InitialCommit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,10 +21,57 @@ namespace DeveloperStore.Infra.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("Store")
-                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("ProductVersion", "8.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("DeveloperStore.Domain.Entities.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id")
+                        .HasName("PK_CARTID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Carts", "Store");
+                });
+
+            modelBuilder.Entity("DeveloperStore.Domain.Entities.CartProduct", b =>
+                {
+                    b.Property<int>("CartId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CartId", "ProductId")
+                        .HasName("PK_MULT_CARTID_PRODID");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CartProduct", "Store");
+                });
 
             modelBuilder.Entity("DeveloperStore.Domain.Entities.Product", b =>
                 {
@@ -192,12 +239,6 @@ namespace DeveloperStore.Infra.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -315,6 +356,30 @@ namespace DeveloperStore.Infra.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", "Store");
+                });
+
+            modelBuilder.Entity("DeveloperStore.Domain.Entities.Cart", b =>
+                {
+                    b.HasOne("DeveloperStore.Infra.Context.Identity.ApplicationUser", null)
+                        .WithMany("Carts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DeveloperStore.Domain.Entities.CartProduct", b =>
+                {
+                    b.HasOne("DeveloperStore.Domain.Entities.Cart", null)
+                        .WithMany("Products")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DeveloperStore.Domain.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DeveloperStore.Domain.Entities.Rating", b =>
@@ -459,10 +524,20 @@ namespace DeveloperStore.Infra.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DeveloperStore.Domain.Entities.Cart", b =>
+                {
+                    b.Navigation("Products");
+                });
+
             modelBuilder.Entity("DeveloperStore.Domain.Entities.Product", b =>
                 {
                     b.Navigation("Rating")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DeveloperStore.Infra.Context.Identity.ApplicationUser", b =>
+                {
+                    b.Navigation("Carts");
                 });
 #pragma warning restore 612, 618
         }

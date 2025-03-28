@@ -34,7 +34,7 @@ namespace DeveloperStore.Infra.Seeds
                 var roleExist = roleManager.RoleExistsAsync(roleName).Result;
                 if (!roleExist)
                 {
-                    var result = roleManager.CreateAsync(new ApplicationRole() { Name = roleName }).Result;
+                    var result = roleManager.CreateAsync(new ApplicationRole() { Name = roleName }).Result;                    
                     if (result.Succeeded)
                     {
                         logger.LogInformation($"Role {roleName} Created with sucess !");

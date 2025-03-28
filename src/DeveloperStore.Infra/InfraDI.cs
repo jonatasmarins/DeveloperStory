@@ -55,12 +55,10 @@ namespace DeveloperStore.Infra
                     opt.Password.RequireUppercase = false;
                     opt.Password.RequiredLength = 6;
                     opt.Password.RequireNonAlphanumeric = false;
-
-                    opt.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultProvider;
-                    opt.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultProvider;
-                })
-                .AddSignInManager()
-                .AddEntityFrameworkStores<AppDbContext>();            
+                })   
+                .AddSignInManager()                
+                .AddEntityFrameworkStores<AppDbContext>()                
+                .AddDefaultTokenProviders();            
 
             return services;
         }        
@@ -76,6 +74,8 @@ namespace DeveloperStore.Infra
             services.AddScoped<IProductRepository, ProductRepository>();
 
             services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<ICartRepository, CartRepository>();
 
             return services;
         }

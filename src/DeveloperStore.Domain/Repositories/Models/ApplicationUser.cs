@@ -17,6 +17,8 @@ namespace DeveloperStore.Infra.Context.Identity
         public Status Status { get; set; }
 
         [EnumDataType(typeof(Role))]
-        public Role Role { get; set; }        
+        public Role Role { get; set; }
+
+        public IReadOnlyList<Cart> Carts { get; set; } = [];
     }    
 }

@@ -1,6 +1,7 @@
 ﻿using DeveloperStore.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using DeveloperStore.Infra.Context.Identity;
 
 namespace DeveloperStore.Infra.Context
 {
@@ -16,28 +17,14 @@ namespace DeveloperStore.Infra.Context
             .Property(p => p.Id)
             .ValueGeneratedOnAdd();
 
-            //builder
-            //    .Property(p => p.UserId)
-            //    .IsRequired();
+            builder
+            .HasOne<ApplicationUser>()
+            .WithMany(x => x.Carts)
+            .HasForeignKey(x => x.UserId);
 
-            //builder
-            //.HasIndex(x => x.UserId)
-            //.IsUnique();
-
-            //builder
-            //.HasOne(x => x.User)
-            //.WithMany()
-            //.HasForeignKey(x => x.UserId);
-
-            //builder
-            //.HasMany(e => e.Products)
-            //.WithOne()
-            //.HasForeignKey(e => e.CartId)
-            //.IsRequired();
-
-            //builder
-            //    .Navigation(a => a.Products)
-            //    .AutoInclude(true);
+            builder
+                .Navigation(a => a.Products)
+                .AutoInclude(true);
         }
     }
 }
