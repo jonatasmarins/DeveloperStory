@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DeveloperStore.Domain.Repositories.Models;
 using DeveloperStore.Domain.Repositories;
-using DeveloperStore.Domain.Services.Models;
+using DeveloperStore.App.Models;
 using MediatR;
 using DeveloperStore.App.Models.Queries.Cart.Request;
 using DeveloperStore.App.Models.Queries.Cart.Response;

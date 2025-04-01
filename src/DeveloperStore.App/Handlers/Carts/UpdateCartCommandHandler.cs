@@ -2,7 +2,7 @@
 using DeveloperStore.App.Models.Commands.Cart.Request;
 using DeveloperStore.App.Models.Commands.Cart.Response;
 using DeveloperStore.Domain.Repositories;
-using DeveloperStore.Domain.Services.Models;
+using DeveloperStore.App.Models;
 using MediatR;
 
 namespace DeveloperStore.App.Handlers.Carts

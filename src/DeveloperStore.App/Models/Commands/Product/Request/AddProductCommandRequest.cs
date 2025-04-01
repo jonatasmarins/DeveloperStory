@@ -1,10 +1,11 @@
 ﻿using DeveloperStore.App.Models.Commands.Product.Response;
 using DeveloperStore.App.Models.Queries.Product.Responses;
+using DeveloperStore.App.Models;
 using MediatR;
 
 namespace DeveloperStore.App.Models.Commands.Product.Request
 {
-    public class AddProductCommandRequest : IRequest<AddProductCommandResponse>
+    public class AddProductCommandRequest : IRequest<IResultResponse<AddProductCommandResponse>>
     {        
         public string Title { get; set; }
         public decimal Price { get; set; }

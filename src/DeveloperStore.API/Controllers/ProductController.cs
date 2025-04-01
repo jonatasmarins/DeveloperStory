@@ -1,5 +1,7 @@
-﻿using DeveloperStore.App.Models.Commands.Product.Request;
+﻿using DeveloperStore.App.Models;
+using DeveloperStore.App.Models.Commands.Product.Request;
 using DeveloperStore.App.Models.Queries.Product.Requests;
+using DeveloperStore.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -24,7 +26,7 @@ namespace DeveloperStore.API.Controllers
             {
                 var result = await mediator.Send(request);
 
-                if (result is null || !result.Data.Any()) return NotFound(result);                
+                if (!result.Success) return StatusCode((int)result.StatusCode, result.Data);
 
                 return Response(result);
             }
@@ -47,7 +49,7 @@ namespace DeveloperStore.API.Controllers
             {
                 var result = await mediator.Send(request);
 
-                if (result is null || result.Id == 0) return NotFound(result);                
+                if (!result.Success) return StatusCode((int)result.StatusCode, result.Data);
 
                 return Ok(result);
             }
@@ -68,9 +70,11 @@ namespace DeveloperStore.API.Controllers
         {
             try
             {
-                var result = await mediator.Send(request);                
+                var result = await mediator.Send(request);
 
-                return Ok(result);
+                if (!result.Success) return StatusCode((int)result.StatusCode, new ValidationErrorResultResponse(detail: string.Join(", ", result.GetMessages())));
+
+                return Ok(result.Data);
             }
             catch (Exception ex)
             {
@@ -89,9 +93,18 @@ namespace DeveloperStore.API.Controllers
 
                 var result = await mediator.Send(request);
 
-                if (result is null || result.Id == 0) return NotFound(result);
+                if (!result.Success)
+                {
+                    var detail = string.Join(", ", result.GetMessages());
 
-                return Ok(result);
+                    ErrorResultResponse erroResult = new ValidationErrorResultResponse(detail: detail);
+
+                    if (result.StatusCode == HttpStatusCode.NotFound) erroResult = new ResourceNotFoundResultResponse($"{nameof(Product)} not found", detail);
+
+                    return StatusCode((int)result.StatusCode, erroResult);
+                }
+
+                return Ok(result.Data);
             }
             catch (Exception ex)
             {
@@ -108,9 +121,9 @@ namespace DeveloperStore.API.Controllers
             {
                 var result = await mediator.Send(request);
 
-                if (!result.IsSuccess) return NotFound(result.Message);
+                if (!result.Success) return StatusCode((int)result.StatusCode, new ResourceNotFoundResultResponse($"{nameof(Product)} not found", string.Join(", ", result.GetMessages())));
 
-                return Ok(result.Message);
+                return Ok(result.Data.Message);
             }
             catch (Exception ex)
             {
@@ -126,7 +139,7 @@ namespace DeveloperStore.API.Controllers
             {
                 var result = await mediator.Send(new GetAllCategoriesQueryRequest());
 
-                if (result is null || !result.Any()) return NotFound(result);                
+                if (result.Success) return StatusCode((int)result.StatusCode, result);
 
                 return Ok(result);
             }
@@ -144,7 +157,7 @@ namespace DeveloperStore.API.Controllers
             {
                 var result = await mediator.Send(request);
 
-                if (result is null || result.TotalItems == 0) return NotFound(result);
+                if (result.Success) return StatusCode((int)result.StatusCode, result);
 
                 return Ok(result);
             }

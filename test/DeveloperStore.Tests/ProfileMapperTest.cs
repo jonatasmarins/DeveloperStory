@@ -5,7 +5,7 @@ using DeveloperStore.App.Models.Queries;
 using DeveloperStore.App.Models.Queries.Product.Responses;
 using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Repositories.Models;
-using DeveloperStore.Domain.Services.Models;
+using DeveloperStore.App.Models;
 
 namespace DeveloperStore.Tests
 {

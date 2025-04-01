@@ -4,7 +4,7 @@ using DeveloperStore.App.Models.Commands.User.Response;
 using DeveloperStore.App.Models.Queries.User.Response;
 using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Repositories.Models;
-using DeveloperStore.Domain.Services.Models;
+using DeveloperStore.App.Models;
 using DeveloperStore.Infra.Context.Identity;
 
 namespace DeveloperStore.App.Mappers

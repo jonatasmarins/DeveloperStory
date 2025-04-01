@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace DeveloperStore.App.Models.Commands.Product.Request
 {
-    public class DeleteProductCommandRequest : IRequest<DeleteProductCommandResponse>
+    public class DeleteProductCommandRequest : IRequest<IResultResponse<DeleteProductCommandResponse>>
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }

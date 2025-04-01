@@ -2,12 +2,12 @@
 using System.Net;
 using System.Text.Json.Serialization;
 
-namespace DeveloperStore.Domain.Services.Models
+namespace DeveloperStore.App.Models
 {
     public interface IResult
     {
         bool Success { get; }
-        
+
         public int TotalItems { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
@@ -33,3 +33,4 @@ namespace DeveloperStore.Domain.Services.Models
         T Data { get; set; }
     }
 }
+

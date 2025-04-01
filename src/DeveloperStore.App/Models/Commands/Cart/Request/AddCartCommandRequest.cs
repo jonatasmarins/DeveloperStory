@@ -1,5 +1,5 @@
 ﻿using DeveloperStore.App.Models.Commands.Cart.Response;
-using DeveloperStore.Domain.Services.Models;
+using DeveloperStore.App.Models;
 using MediatR;
 
 namespace DeveloperStore.App.Models.Commands.Cart.Request

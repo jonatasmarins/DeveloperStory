@@ -1,6 +1,6 @@
 ﻿using DeveloperStore.App.Models.Commands.User.Response;
 using DeveloperStore.Domain.Enums;
-using DeveloperStore.Domain.Services.Models;
+using DeveloperStore.App.Models;
 using MediatR;
 
 namespace DeveloperStore.App.Models.Commands.User.Request

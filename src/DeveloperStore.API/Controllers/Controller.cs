@@ -1,4 +1,4 @@
-﻿using DeveloperStore.Domain.Services.Models;
+﻿using DeveloperStore.App.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DeveloperStore.API.Controllers

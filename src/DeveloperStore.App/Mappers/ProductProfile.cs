@@ -4,7 +4,7 @@ using DeveloperStore.App.Models.Commands.Product.Response;
 using DeveloperStore.App.Models.Queries.Product.Responses;
 using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Repositories.Models;
-using DeveloperStore.Domain.Services.Models;
+using DeveloperStore.App.Models;
 
 namespace DeveloperStore.App.Mappers
 {
@@ -45,11 +45,14 @@ namespace DeveloperStore.App.Mappers
     {
         public Product Convert(UpdateProductCommandRequest source, Product destination, ResolutionContext context)
         {
+            destination ??= new Product();
+
             destination.Title = source.Title;
             destination.Price = source.Price;
             destination.Description = source.Description;
             destination.Category = source.Category;
             destination.Image = source.Image;
+            destination.Rating.ProductId = source.Id;
             destination.Rating.Count = source.Rating.Count;
             destination.Rating.Rate = source.Rating.Rate;
             destination.UpdatedAt = DateTime.Now;

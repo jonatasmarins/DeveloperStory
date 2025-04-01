@@ -2,7 +2,7 @@
 using DeveloperStore.API.Controllers;
 using DeveloperStore.App.Models.Queries.Product.Requests;
 using DeveloperStore.App.Models.Queries.Product.Responses;
-using DeveloperStore.Domain.Services.Models;
+using DeveloperStore.App.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

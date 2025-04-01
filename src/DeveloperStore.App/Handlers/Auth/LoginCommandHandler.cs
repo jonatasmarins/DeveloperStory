@@ -1,5 +1,5 @@
 ﻿using DeveloperStore.App.Models.Commands.Auth;
-using DeveloperStore.Domain.Services.Models;
+using DeveloperStore.App.Models;
 using DeveloperStore.Infra.Context.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

@@ -3,7 +3,7 @@ using DeveloperStore.Domain.Repositories.Models;
 using DeveloperStore.Domain.Repositories;
 using MediatR;
 using DeveloperStore.App.Models.Commands.User.Request;
-using DeveloperStore.Domain.Services.Models;
+using DeveloperStore.App.Models;
 using DeveloperStore.App.Models.Commands.User.Response;
 
 namespace DeveloperStore.App.Handlers.Users

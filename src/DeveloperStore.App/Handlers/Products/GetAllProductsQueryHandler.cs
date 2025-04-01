@@ -3,7 +3,7 @@ using DeveloperStore.App.Models.Queries.Product.Requests;
 using DeveloperStore.App.Models.Queries.Product.Responses;
 using DeveloperStore.Domain.Repositories;
 using DeveloperStore.Domain.Repositories.Models;
-using DeveloperStore.Domain.Services.Models;
+using DeveloperStore.App.Models;
 using MediatR;
 
 namespace DeveloperStore.App.Handlers.Products
@@ -15,7 +15,9 @@ namespace DeveloperStore.App.Handlers.Products
     {
 
         public async Task<IResultResponse<IEnumerable<GetProductsQueryResponse>>> Handle(GetAllQueryRequest request, CancellationToken cancellationToken)
-        {            
+        {      
+            var response = new ResultResponse<IEnumerable<GetProductsQueryResponse>>(); 
+
             var options = new QueryOptions
             {
                 IsAsNoTracking = true,
@@ -26,7 +28,14 @@ namespace DeveloperStore.App.Handlers.Products
 
             var result = await productRepository.GetAllAsync(options);
 
-            return mapper.Map<ResultResponse<IEnumerable<GetProductsQueryResponse>>>(result);
+            if (result is null || !result.Data.Any())
+            {
+                response.StatusCode = System.Net.HttpStatusCode.NotFound;
+            }
+
+            response.Data = mapper.Map<IEnumerable<GetProductsQueryResponse>>(result);
+
+            return response;
         }
     }
 }

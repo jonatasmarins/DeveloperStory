@@ -2,7 +2,7 @@
 using System.Net;
 using System.Text.Json.Serialization;
 
-namespace DeveloperStore.Domain.Services.Models
+namespace DeveloperStore.App.Models
 {
     public abstract class Result : IResult
     {

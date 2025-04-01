@@ -5,7 +5,7 @@ using DeveloperStore.App.Models.Commands.Product.Request;
 using DeveloperStore.App.Models.Queries.Cart.Response;
 using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Repositories.Models;
-using DeveloperStore.Domain.Services.Models;
+using DeveloperStore.App.Models;
 using static DeveloperStore.App.Models.Commands.Cart.Request.AddCartCommandRequest;
 using static DeveloperStore.App.Models.Commands.Cart.Response.UpdateCartCommandResponse;
 using static DeveloperStore.App.Models.Queries.Cart.Response.GetAllCartQueryResponse;

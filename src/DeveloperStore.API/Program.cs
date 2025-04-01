@@ -21,7 +21,7 @@ builder.Services.AddControllers(config =>
                     .Build();
 
     config.Filters.Add(new AuthorizeFilter(policy));
-})    
+})
 .AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
