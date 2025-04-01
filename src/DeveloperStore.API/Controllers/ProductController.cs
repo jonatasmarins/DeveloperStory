@@ -139,7 +139,7 @@ namespace DeveloperStore.API.Controllers
             {
                 var result = await mediator.Send(new GetAllCategoriesQueryRequest());
 
-                if (result.Success) return StatusCode((int)result.StatusCode, result);
+                if (!result.Success) return StatusCode((int)result.StatusCode, result);
 
                 return Ok(result);
             }
@@ -157,7 +157,7 @@ namespace DeveloperStore.API.Controllers
             {
                 var result = await mediator.Send(request);
 
-                if (result.Success) return StatusCode((int)result.StatusCode, result);
+                if (!result.Success) return StatusCode((int)result.StatusCode, result);
 
                 return Ok(result);
             }

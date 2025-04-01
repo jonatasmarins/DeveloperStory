@@ -31,6 +31,9 @@ namespace DeveloperStore.App.Handlers.Products
             if (result is null || !result.Data.Any())
             {
                 response.StatusCode = System.Net.HttpStatusCode.NotFound;
+                response.AddMessage("Product Not Found");
+
+                return response;
             }
 
             response.Data = mapper.Map<IEnumerable<GetProductsQueryResponse>>(result);

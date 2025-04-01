@@ -38,7 +38,6 @@ namespace DeveloperStore.App.Mappers
 
             #endregion
 
-
             #region GetById
 
             CreateMap<GetByIdCartQueryResponse, Cart>()

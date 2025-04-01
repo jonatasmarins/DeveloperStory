@@ -189,13 +189,11 @@ namespace DeveloperStore.Tests.Controllers
             // Arrange
             var request = new DeleteCartCommandRequest { Id = 1 };
 
-            var cart = _mapper.Map<DeleteCartCommandResponse>(GenerateCart());
-
-            var mockResponse = new ResultResponse<DeleteCartCommandResponse>(cart);
+            var response = new ResultResponse<DeleteCartCommandResponse>(new DeleteCartCommandResponse("Product Deleted with sucess"));
 
             _mediator
                 .Send(Arg.Any<DeleteCartCommandRequest>(), default)
-                .Returns(mockResponse);
+                .Returns(response);
 
             // Act
             var result = await _controller.Delete(request);
@@ -204,7 +202,7 @@ namespace DeveloperStore.Tests.Controllers
             var actionResult = Assert.IsType<OkObjectResult>(result);
 
             Assert.Equal(200, actionResult.StatusCode);
-            Assert.Equal(mockResponse.Data.Message, actionResult.Value);
+            Assert.Equal(response.Data.Message, actionResult.Value);
         }
 
         #endregion
@@ -220,10 +218,13 @@ namespace DeveloperStore.Tests.Controllers
 
             var cart = _mapper.Map<UpdateCartCommandResponse>(GenerateCart());
 
-            var mockResponse = new ResultResponse<UpdateCartCommandResponse>(cart);
+            var mockResponse = new ResultResponse<UpdateCartCommandResponse>()
+            {
+                Data = cart
+            };
 
             _mediator
-                .Send(Arg.Any<UpdateCartCommandResponse>(), default)
+                .Send(Arg.Any<UpdateCartCommandRequest>(), default)
                 .Returns(mockResponse);
 
             // Act
@@ -233,8 +234,8 @@ namespace DeveloperStore.Tests.Controllers
             var actionResult = Assert.IsType<OkObjectResult>(result);
 
             Assert.Equal(200, actionResult.StatusCode);
-            
-            Assert.Equal(mockResponse, actionResult.Value);
+
+            Assert.Equal(mockResponse.Data, actionResult.Value);
         }
 
         #endregion
@@ -255,14 +256,12 @@ namespace DeveloperStore.Tests.Controllers
 
         private static Cart GenerateCart()
         {
-            // Criando um gerador de dados falsos para o Cart e CartProduct
             var cartFaker = new Faker<Cart>()
                 .RuleFor(c => c.Id, f => f.IndexFaker + 1)
                 .RuleFor(c => c.Date, f => f.Date.Past())
                 .RuleFor(c => c.UserId, f => f.Random.Int(1, 1000))
                 .RuleFor(c => c.Products, f => GenerateCartProducts(f));
 
-            // Gerando o Cart
             return cartFaker.Generate();
         }
 
@@ -273,7 +272,6 @@ namespace DeveloperStore.Tests.Controllers
                 .RuleFor(cp => cp.ProductId, f => f.Random.Int(1, 100))
                 .RuleFor(cp => cp.Quantity, f => f.Random.Int(1, 10));
 
-            // Gerando entre 1 e 5 produtos para o carrinho
             return cartProductFaker.Generate(f.Random.Int(1, 5));
         }
     }

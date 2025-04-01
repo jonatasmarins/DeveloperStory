@@ -1,23 +1,21 @@
-﻿using AutoMapper;
-using Bogus;
+﻿using Bogus;
 using DeveloperStore.App.Handlers.Products;
 using DeveloperStore.App.Models.Commands.Product.Request;
 using DeveloperStore.Domain.Repositories;
 using DeveloperStore.Domain.Repositories.Models;
 using NSubstitute;
+using System.Net;
 
 namespace DeveloperStore.Tests.Handlers.Product
 {
     public class DeleteCommandHandlerTest
     {
         private IProductRepository productRepository;
-        private IUnitOfWork unitOfWork;
-        private IMapper mapper;
+        private IUnitOfWork unitOfWork;        
 
         public DeleteCommandHandlerTest()
         {
-            productRepository = Substitute.For<IProductRepository>();
-            mapper = Substitute.For<IMapper>();
+            productRepository = Substitute.For<IProductRepository>();            
             unitOfWork = Substitute.For<IUnitOfWork>();
         }
 
@@ -34,13 +32,14 @@ namespace DeveloperStore.Tests.Handlers.Product
             var request = new Faker<DeleteProductCommandRequest>().RuleFor(x => x.Id, f => f.Random.Int(1, 5));
 
             //Act
-            var handler = new DeleteCommandHandler(productRepository, unitOfWork, mapper);
+            var handler = new DeleteCommandHandler(productRepository, unitOfWork);
 
             var response = await handler.Handle(request, CancellationToken.None);
 
             //Assert
-            Assert.False(response.IsSuccess);
-            Assert.Contains("Produt not found!", response.Message);
+            Assert.False(response.Success);
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
@@ -56,13 +55,12 @@ namespace DeveloperStore.Tests.Handlers.Product
             var request = new Faker<DeleteProductCommandRequest>().RuleFor(x => x.Id, f => f.Random.Int(1, 5));
 
             //Act
-            var handler = new DeleteCommandHandler(productRepository, unitOfWork, mapper);
+            var handler = new DeleteCommandHandler(productRepository, unitOfWork);
 
             var response = await handler.Handle(request, CancellationToken.None);
 
             //Assert
-            Assert.True(response.IsSuccess);
-            Assert.Contains("Product deleted with Success !", response.Message);
+            Assert.True(response.Success);            
         }
 
     }

@@ -37,8 +37,11 @@ namespace DeveloperStore.Tests.Controllers
 
             var response = new ResultResponse<IEnumerable<GetProductsQueryResponse>>()
             {
-                Data = Enumerable.Empty<GetProductsQueryResponse>()
+                StatusCode = HttpStatusCode.NotFound,
+                Data = Enumerable.Empty<GetProductsQueryResponse>(),                
             };
+
+            response.AddMessage("Products Not Found");
 
             _mediator
                 .Send(Arg.Any<GetAllQueryRequest>(), default)
@@ -48,7 +51,7 @@ namespace DeveloperStore.Tests.Controllers
             var result = await _controller.Get(request);
 
             // Assert
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            var notFoundResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal((int)HttpStatusCode.NotFound, notFoundResult.StatusCode);
         }
 
@@ -94,7 +97,7 @@ namespace DeveloperStore.Tests.Controllers
                 .ThrowsAsync(new Exception("Test exception"));
 
             // Act
-            var result = await _controller.Get(request);            
+            var result = await _controller.Get(request);
 
             // Assert
             var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -108,11 +111,17 @@ namespace DeveloperStore.Tests.Controllers
         [Fact(DisplayName = "[GetByID] - Not Found")]
         [Trait("GetById", "NotFound")]
         public async Task ItShould_GetByIdWhenProductNotExist_NotFound()
-        {            
+        {
             // Arrange
             var request = new GetByIdQueryRequest();
 
-            var response = new GetByIdQueryResponse();
+            var response = new ResultResponse<GetByIdQueryResponse>()
+            {
+                StatusCode = HttpStatusCode.NotFound,
+                Data = new GetByIdQueryResponse(),
+            };
+
+            response.AddMessage("Product Not Found");
 
             _mediator
                 .Send(Arg.Any<GetByIdQueryRequest>(), default)
@@ -122,7 +131,7 @@ namespace DeveloperStore.Tests.Controllers
             var result = await _controller.GetById(request);
 
             // Assert
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            var notFoundResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal((int)HttpStatusCode.NotFound, notFoundResult.StatusCode);
         }
 
@@ -132,23 +141,24 @@ namespace DeveloperStore.Tests.Controllers
         {
             // Arrange
             var faker = new Faker();
-            var productId = faker.Random.Int(1,5);
+            var productId = faker.Random.Int(1, 5);
 
             var request = new GetByIdQueryRequest() { Id = productId };
             var product = new Faker<GetByIdQueryResponse>().RuleFor(x => x.Id, productId);
 
             _mediator
                 .Send(Arg.Any<GetByIdQueryRequest>(), default)
-                .Returns(product);
+                .Returns(new ResultResponse<GetByIdQueryResponse>(product));
 
             // Act
             var result = await _controller.GetById(request);
 
-            var data = ((OkObjectResult)result).Value as GetByIdQueryResponse;
+            var data = ((OkObjectResult)result).Value as ResultResponse<GetByIdQueryResponse>;
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
-            Assert.True(data?.Id == productId);
+
+            Assert.True(data?.Data.Id == productId);
         }
 
         [Fact(DisplayName = "[GetByID] - InternalServerError")]
@@ -181,7 +191,10 @@ namespace DeveloperStore.Tests.Controllers
             // Arrange
             var request = new GetAllCategoriesQueryRequest();
 
-            IEnumerable<string> response = [];
+            var response = new ResultResponse<IEnumerable<string>>();
+
+            response.StatusCode = HttpStatusCode.NotFound;
+            response.AddMessage("Product Not Found");
 
             _mediator
                 .Send(Arg.Any<GetAllCategoriesQueryRequest>(), default)
@@ -191,7 +204,7 @@ namespace DeveloperStore.Tests.Controllers
             var result = await _controller.GetAllCategories();
 
             // Assert
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            var notFoundResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal((int)HttpStatusCode.NotFound, notFoundResult.StatusCode);
         }
 
@@ -201,9 +214,14 @@ namespace DeveloperStore.Tests.Controllers
         public async Task ItShould_GetAllCategories_Success(int qtd)
         {
             // Arrange
-            var faker = new Faker("pt_BR");                    
+            var faker = new Faker("pt_BR");
 
-            IEnumerable<string> response = faker.Commerce.Categories(qtd);
+            IEnumerable<string> categories = faker.Commerce.Categories(qtd);
+
+            var response = new ResultResponse<IEnumerable<string>>
+            {
+                Data = categories
+            };
 
             _mediator
                 .Send(Arg.Any<GetAllCategoriesQueryRequest>(), default)
@@ -212,11 +230,12 @@ namespace DeveloperStore.Tests.Controllers
             // Act
             var result = await _controller.GetAllCategories();
 
-            var data = ((OkObjectResult)result).Value as IEnumerable<string>;
+            var okResult = ((OkObjectResult)result).Value as ResultResponse<IEnumerable<string>>;
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
-            Assert.True(data?.Count() == qtd);
+
+            Assert.True(okResult?.Data.Count() == qtd);
         }
 
         [Fact(DisplayName = "[GetAllCategories] - InternalServerError")]
@@ -251,17 +270,22 @@ namespace DeveloperStore.Tests.Controllers
 
             var request = new GetByCategoryQueryRequest() { Category = category };
 
-            IEnumerable<GetByCategoryQueryResponse> response = [];
+            var response = new ResultResponse<IEnumerable<GetByCategoryQueryResponse>>();
+
+            response.StatusCode = HttpStatusCode.NotFound;
+
+            response.AddMessage("Product Not Found");
 
             _mediator
-                .Send(Arg.Any<GetByCategoryQueryResponse>(), default)
+                .Send(Arg.Any<GetByCategoryQueryRequest>(), default)
                 .Returns(response);
 
             // Act
-            var result = await _controller.GetByCategory(new GetByCategoryQueryRequest { Category = "No Category" });
+            var result = await _controller.GetByCategory(request);
 
             // Assert
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            var notFoundResult = Assert.IsType<ObjectResult>(result);
+
             Assert.Equal((int)HttpStatusCode.NotFound, notFoundResult.StatusCode);
         }
 
