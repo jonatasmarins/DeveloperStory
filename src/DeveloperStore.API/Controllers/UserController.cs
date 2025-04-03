@@ -9,7 +9,7 @@ namespace DeveloperStore.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController(IMediator mediator, ILogger<ProductController> logger) : Controller
+    public class UserController(IMediator mediator, ILogger<UserController> logger) : Controller
     {
         //TODO - Documentar as apis com swagger
         
@@ -99,7 +99,7 @@ namespace DeveloperStore.API.Controllers
 
                 if (!result.Success) return StatusCode((int)result.StatusCode, string.Join(",", result.GetMessages()));
 
-                return Ok(result.Data.Message);
+                return Ok(result.Data);
             }
             catch (Exception ex)
             {

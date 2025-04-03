@@ -4,11 +4,13 @@ using MediatR;
 using DeveloperStore.App.Models.Commands.User.Request;
 using DeveloperStore.App.Models.Commands.User.Response;
 using DeveloperStore.App.Models;
+using AutoMapper;
 
 namespace DeveloperStore.App.Handlers.Users
 {
     public class DeleteUserCommandHandler(
         IUserRepository userRepository,
+        IMapper mapper,
         IUnitOfWork unitOfWork) : IRequestHandler<DeleteUserCommandRequest, IResultResponse<DeleteUserCommandResponse>>
     {
         public async Task<IResultResponse<DeleteUserCommandResponse>> Handle(DeleteUserCommandRequest request, CancellationToken cancellationToken)
@@ -30,7 +32,7 @@ namespace DeveloperStore.App.Handlers.Users
 
             await unitOfWork.SaveAsync(cancellationToken);
 
-            response.Data.Message = "User deleted with Success !";
+            response.Data = mapper.Map<DeleteUserCommandResponse>(user);
 
             return response;
         }

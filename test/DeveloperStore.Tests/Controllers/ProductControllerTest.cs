@@ -153,12 +153,12 @@ namespace DeveloperStore.Tests.Controllers
             // Act
             var result = await _controller.GetById(request);
 
-            var data = ((OkObjectResult)result).Value as ResultResponse<GetByIdQueryResponse>;
+            var data = ((OkObjectResult)result).Value as GetByIdQueryResponse;
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
 
-            Assert.True(data?.Data.Id == productId);
+            Assert.True(data?.Id == productId);
         }
 
         [Fact(DisplayName = "[GetByID] - InternalServerError")]

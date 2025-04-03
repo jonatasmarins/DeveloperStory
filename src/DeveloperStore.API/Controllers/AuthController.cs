@@ -20,9 +20,9 @@ namespace DeveloperStore.API.Controllers
         {
             var result = await mediator.Send(request);
 
-            if (!result.Success) return StatusCode((int)result.StatusCode, result.Erros);
+            if (!result.Success) return StatusCode((int)result.StatusCode, string.Join(",", result.Erros));
 
-            return Ok(result.Data); // no need to cast here because user.id is already a guid, and not a string
+            return Ok(result.Data);
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using DeveloperStore.App.Models;
 using DeveloperStore.App.Models.Commands.User.Request;
 using DeveloperStore.App.Models.Commands.User.Response;
 using DeveloperStore.App.Models.Queries.User.Response;
 using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Repositories.Models;
-using DeveloperStore.App.Models;
 using DeveloperStore.Infra.Context.Identity;
 
 namespace DeveloperStore.App.Mappers
@@ -30,7 +30,7 @@ namespace DeveloperStore.App.Mappers
             CreateMap<AddUserGeolocationRequest, Geolocation>()
                 .ReverseMap();
 
-            CreateMap<ApplicationUser, AddUserCommandResponse>()                
+            CreateMap<ApplicationUser, AddUserCommandResponse>()
                 .ReverseMap();
 
             CreateMap<AddUserNameResponse, Name>()
@@ -55,14 +55,14 @@ namespace DeveloperStore.App.Mappers
             CreateMap<GetAllUserGeolocationResponse, Geolocation>()
                 .ReverseMap();
 
-            CreateMap<GetAllUserQueryResponse, ApplicationUser>()                            
+            CreateMap<GetAllUserQueryResponse, ApplicationUser>()
                 .ReverseMap();
 
             #endregion
 
             #region Update
 
-            CreateMap<UpdateUserCommandRequest, ApplicationUser>()                           
+            CreateMap<UpdateUserCommandRequest, ApplicationUser>()
                 .ReverseMap();
 
             CreateMap<UpdateUserNameRequest, Name>()
@@ -74,7 +74,7 @@ namespace DeveloperStore.App.Mappers
             CreateMap<UpdateUserGeolocationRequest, Geolocation>()
                 .ReverseMap();
 
-            CreateMap<ApplicationUser, UpdateUserCommandResponse>()                
+            CreateMap<ApplicationUser, UpdateUserCommandResponse>()
                 .ReverseMap();
 
             CreateMap<UpdateUserNameResponse, Name>()
@@ -84,6 +84,22 @@ namespace DeveloperStore.App.Mappers
                 .ReverseMap();
 
             CreateMap<UpdateUserGeolocationResponse, Geolocation>()
+                .ReverseMap();
+
+            #endregion
+
+            #region Update
+
+            CreateMap<ApplicationUser, DeleteUserCommandResponse>()
+                .ReverseMap();
+
+            CreateMap<DeleteUserNameResponse, Name>()
+                .ReverseMap();
+
+            CreateMap<DeleteUserAddressResponse, Address>()
+                .ReverseMap();
+
+            CreateMap<DeleteUserGeolocationResponse, Geolocation>()
                 .ReverseMap();
 
             #endregion

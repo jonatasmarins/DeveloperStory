@@ -51,7 +51,7 @@ namespace DeveloperStore.API.Controllers
 
                 if (!result.Success) return StatusCode((int)result.StatusCode, result.Data);
 
-                return Ok(result);
+                return Ok(result.Data);
             }
             catch (Exception ex)
             {
