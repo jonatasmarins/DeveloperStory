@@ -56,6 +56,7 @@ namespace DeveloperStore.Infra
                     opt.Password.RequiredLength = 6;
                     opt.Password.RequireNonAlphanumeric = false;
                 })   
+                .AddRoles<ApplicationRole>()
                 .AddSignInManager()                
                 .AddEntityFrameworkStores<AppDbContext>()                
                 .AddDefaultTokenProviders();            

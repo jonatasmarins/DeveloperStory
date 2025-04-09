@@ -19,7 +19,7 @@ namespace DeveloperStore.App.Handlers.Products
             {
                 response.StatusCode = System.Net.HttpStatusCode.NotFound;
 
-                response.Data = [];
+                response.AddMessage($"there are nothing in our database");
 
                 return response;
             }

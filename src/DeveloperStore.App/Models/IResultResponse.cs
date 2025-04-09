@@ -6,20 +6,26 @@ namespace DeveloperStore.App.Models
 {
     public interface IResult
     {
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
         bool Success { get; }
 
         public int TotalItems { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
         public int PageSize { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
         HttpStatusCode StatusCode { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
         IReadOnlyList<string> Erros { get; }
+
         void AddMessage(IList<ValidationFailure> failures);
+        
         void AddMessage(string failure);
+        
         IList<string> GetMessages();
     }
 

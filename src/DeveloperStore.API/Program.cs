@@ -2,17 +2,15 @@ using DeveloperStore.App;
 using DeveloperStore.Domain.Enums;
 using DeveloperStore.Infra;
 using DeveloperStore.Infra.Context.Identity;
-using DeveloperStore.Infra.Seeds;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers(config =>
 {
@@ -26,19 +24,16 @@ builder.Services.AddControllers(config =>
 {
     options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
     options.JsonSerializerOptions.WriteIndented = true;
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
 builder.Services
     .AddAuthorizationBuilder()
-    .AddPolicy(Role.Admin.ToString(), policy => policy.RequireClaim("Role", Role.Admin.ToString()))
-    .AddPolicy(Role.Customer.ToString(), policy => policy.RequireClaim("Role", Role.Customer.ToString()))
-    .AddPolicy(Role.Manager.ToString(), policy => policy.RequireClaim("Role", Role.Manager.ToString()));
-
-//builder.Services.AddAuthentication();
+    .AddPolicy("ManagerOrAdm", policy => policy.RequireRole(Role.Manager.ToString(), Role.Admin.ToString()));
 
 builder.Logging.ClearProviders();
-builder.Logging.AddConsole(); 
-builder.Logging.AddDebug(); 
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 var key = Encoding.ASCII.GetBytes(IdentitySettings.Secret);
 
@@ -61,15 +56,17 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
 {
+    c.EnableAnnotations();
+
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Developer Store",
-        Version = "v1"
+        Description = "Developer Store API Documentation",
+        Version = "v1",
     });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -106,12 +103,17 @@ builder.Services.AddApplication();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
 
-    app.UseSwaggerUI();
+    //app.UseSwaggerUI();
+
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1");
+        c.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseHttpsRedirection();

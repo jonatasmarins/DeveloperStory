@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Text;
+using System.Security.Claims;
 
 namespace DeveloperStore.App.Handlers.Auth
 {
@@ -37,7 +38,9 @@ namespace DeveloperStore.App.Handlers.Auth
                 return result;
             }
 
-            result.Data.Token = GetToken();
+            var roles = await userManager.GetRolesAsync(user);
+
+            result.Data.Token = GetToken(roles);
 
             return result;
         }
@@ -49,7 +52,7 @@ namespace DeveloperStore.App.Handlers.Auth
             result.StatusCode = statusCode;
         }
 
-        private static string GetToken()
+        private static string GetToken(IList<string> roles)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -58,12 +61,23 @@ namespace DeveloperStore.App.Handlers.Auth
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Expires = DateTime.UtcNow.AddMinutes(10),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                Subject = GenerateClaims(roles)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);
+        }
+
+        private static ClaimsIdentity GenerateClaims(IList<string> roles)
+        {
+            var ci = new ClaimsIdentity();
+
+            foreach (var role in roles)
+                ci.AddClaim(new Claim(ClaimTypes.Role, role));
+
+            return ci;
         }
     }
 }

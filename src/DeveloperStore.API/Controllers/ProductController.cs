@@ -1,9 +1,13 @@
 ﻿using DeveloperStore.App.Models;
 using DeveloperStore.App.Models.Commands.Product.Request;
+using DeveloperStore.App.Models.Commands.Product.Response;
 using DeveloperStore.App.Models.Queries.Product.Requests;
+using DeveloperStore.App.Models.Queries.Product.Responses;
 using DeveloperStore.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace DeveloperStore.API.Controllers
@@ -12,14 +16,11 @@ namespace DeveloperStore.API.Controllers
     [ApiController]
     public class ProductController(IMediator mediator, ILogger<ProductController> logger) : Controller
     {
-        //TODO - Documentar as apis com swagger
-
-        /// <summary>
-        /// Retrieve a list of all products
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpGet]
+        [AllowAnonymous]
+        [HttpGet(Name = "GetAllProduct")]
+        [SwaggerOperation(Summary = "List all Products")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IResultResponse<IEnumerable<GetProductsQueryResponse>>))]            
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]        
         public async Task<IActionResult> Get([FromQuery] GetAllQueryRequest request)
         {
             try
@@ -37,12 +38,11 @@ namespace DeveloperStore.API.Controllers
             }
         }
 
-        /// <summary>
-        /// Retrieve a specific product by ID
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpGet("{Id}")]
+        [AllowAnonymous]
+        [HttpGet("{Id}", Name = "GetProductById")]
+        [SwaggerOperation(Summary = "Get Product by Id")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(GetProductsQueryResponse))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]        
         public async Task<IActionResult> GetById([FromRoute] GetByIdQueryRequest request)
         {
             try
@@ -60,12 +60,14 @@ namespace DeveloperStore.API.Controllers
             }
         }
 
-        /// <summary>
-        /// Add a new product
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPost]
+        [HttpPost()]
+        [Authorize(Policy = "ManagerOrAdm", AuthenticationSchemes = "Bearer")]
+        [SwaggerOperation(Summary = "Add new product")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(AddProductCommandResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResultResponse))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Add([FromBody] AddProductCommandRequest request)
         {
             try
@@ -83,8 +85,16 @@ namespace DeveloperStore.API.Controllers
             }
         }
 
-
-        [HttpPut($"{{id}}")]
+        
+        [HttpPut($"{{id}}", Name = "UpdateProduct")]
+        [Authorize(Policy = "ManagerOrAdm", AuthenticationSchemes = "Bearer")]
+        [SwaggerOperation(Summary = "Update product")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(UpdateProductCommandResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResultResponse))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ResourceNotFoundResultResponse))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Put(int id, [FromBody] UpdateProductCommandRequest request)
         {
             try
@@ -112,9 +122,15 @@ namespace DeveloperStore.API.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, "An unexpected error occurred, please try again or contact the administrator");
             }
         }
-
-        // DELETE api/<ProductController>/5
-        [HttpDelete("{Id}")]
+        
+        [HttpDelete("{Id}", Name = "Delete Product")]
+        [Authorize(Policy = "ManagerOrAdm", AuthenticationSchemes = "Bearer")]
+        [SwaggerOperation(Summary = "Delete product")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(DeleteProductCommandResponse))]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ResourceNotFoundResultResponse))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete([FromRoute] DeleteProductCommandRequest request)
         {
             try
@@ -132,14 +148,19 @@ namespace DeveloperStore.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("Categories")]
+        [SwaggerOperation(Summary = "List all Categories of products")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IResultResponse<IEnumerable<string>>))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ResourceNotFoundResultResponse))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllCategories()
         {
             try
             {
                 var result = await mediator.Send(new GetAllCategoriesQueryRequest());
-
-                if (!result.Success) return StatusCode((int)result.StatusCode, result);
+                
+                if (!result.Success) return StatusCode((int)result.StatusCode, new ResourceNotFoundResultResponse(detail: string.Join(", ", result.GetMessages())));
 
                 return Ok(result);
             }
@@ -150,14 +171,19 @@ namespace DeveloperStore.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("Category/{Category}")]
+        [SwaggerOperation(Summary = "Get category by ID")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IResultResponse<IEnumerable<GetByCategoryQueryResponse>>))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ResourceNotFoundResultResponse))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByCategory([FromRoute] GetByCategoryQueryRequest request)
         {
             try
             {
                 var result = await mediator.Send(request);
 
-                if (!result.Success) return StatusCode((int)result.StatusCode, result);
+                if (!result.Success) return StatusCode((int)result.StatusCode, new ResourceNotFoundResultResponse(detail: string.Join(", ", result.GetMessages())));
 
                 return Ok(result);
             }
