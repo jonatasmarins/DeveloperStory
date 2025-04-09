@@ -14,8 +14,7 @@ namespace DeveloperStore.App.Handlers.Users
         IMapper mapper) : IRequestHandler<UpdateUserCommandRequest, IResultResponse<UpdateUserCommandResponse>>
     {
         public async Task<IResultResponse<UpdateUserCommandResponse>> Handle(UpdateUserCommandRequest request, CancellationToken cancellationToken)
-        {
-            //TODO Validation com FluentValidation
+        {            
             var response = new ResultResponse<UpdateUserCommandResponse>();
 
             var entity = await userRepository.GetByIdAsync(request.Id, new QueryOptions { IsAsNoTracking = true });

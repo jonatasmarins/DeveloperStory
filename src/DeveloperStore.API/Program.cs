@@ -29,7 +29,8 @@ builder.Services.AddControllers(config =>
 
 builder.Services
     .AddAuthorizationBuilder()
-    .AddPolicy("ManagerOrAdm", policy => policy.RequireRole(Role.Manager.ToString(), Role.Admin.ToString()));
+    .AddPolicy("ManagerOrAdm", policy => policy.RequireRole(Role.Manager.ToString(), Role.Admin.ToString()))
+    .AddPolicy("All", policy => policy.RequireRole(Role.Customer.ToString(), Role.Manager.ToString(), Role.Admin.ToString()));
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -105,15 +106,9 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
+    app.UseSwagger();    
 
-    //app.UseSwaggerUI();
-
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1");
-        c.RoutePrefix = string.Empty;
-    });
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

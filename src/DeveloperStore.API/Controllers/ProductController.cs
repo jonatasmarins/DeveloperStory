@@ -26,8 +26,8 @@ namespace DeveloperStore.API.Controllers
             try
             {
                 var result = await mediator.Send(request);
-
-                if (!result.Success) return StatusCode((int)result.StatusCode, result.Data);
+                
+                if (!result.Success) return StatusCode((int)result.StatusCode, new ValidationErrorResultResponse(detail: string.Join(", ", result.GetMessages())));
 
                 return Response(result);
             }
@@ -49,7 +49,7 @@ namespace DeveloperStore.API.Controllers
             {
                 var result = await mediator.Send(request);
 
-                if (!result.Success) return StatusCode((int)result.StatusCode, result.Data);
+                if (!result.Success) return StatusCode((int)result.StatusCode, new ValidationErrorResultResponse(detail: string.Join(", ", result.GetMessages())));
 
                 return Ok(result.Data);
             }
@@ -74,7 +74,7 @@ namespace DeveloperStore.API.Controllers
             {
                 var result = await mediator.Send(request);
 
-                if (!result.Success) return StatusCode((int)result.StatusCode, new ValidationErrorResultResponse(detail: string.Join(", ", result.GetMessages())));
+                if (!result.Success) return StatusCode((int)result.StatusCode, new ValidationErrorResultResponse(detail: string.Join(", ", result.GetMessages())));                
 
                 return Ok(result.Data);
             }
