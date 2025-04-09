@@ -27,6 +27,8 @@ namespace DeveloperStore.App.Handlers.Products
             if (result is null || result.Id == 0)
             {
                 response.StatusCode = System.Net.HttpStatusCode.NotFound;
+
+                response.AddMessage($"Product with {request.Id} ID does not exist in our database");
             }
 
             response.Data = mapper.Map<GetByIdQueryResponse>(result);

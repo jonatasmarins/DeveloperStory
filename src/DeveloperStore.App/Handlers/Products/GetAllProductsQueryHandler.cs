@@ -36,7 +36,7 @@ namespace DeveloperStore.App.Handlers.Products
                 return response;
             }
 
-            response.Data = mapper.Map<IEnumerable<GetProductsQueryResponse>>(result);
+            response = mapper.Map<ResultResponse<IEnumerable<GetProductsQueryResponse>>>(result);
 
             return response;
         }

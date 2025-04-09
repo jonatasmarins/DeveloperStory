@@ -33,6 +33,8 @@ namespace DeveloperStore.App.Handlers.Products
 
                 response.AddMessage($"there are nothing in our database");
 
+                response.Data = [];
+
                 return response;
             }
             

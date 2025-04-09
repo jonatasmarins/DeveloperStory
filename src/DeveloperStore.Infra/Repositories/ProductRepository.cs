@@ -8,7 +8,7 @@ namespace DeveloperStore.Infra.Repositories
 {
     public class ProductRepository(AppDbContext context) : Repository<Product>(context), IProductRepository
     {
-        public async Task<IEnumerable<string>> GetAllCategories()
+        public async Task<IEnumerable<string>?> GetAllCategories()
         {
             return await context.Products.AsNoTracking().Select(x => x.Category).Distinct().OrderBy(x => x).ToListAsync();
         }
